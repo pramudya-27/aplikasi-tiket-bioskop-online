@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Movies Mania</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+=======
+    <title>Movies Mania</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+>>>>>>> cbfd8f8 (add fe)
     <style>
         body { font-family: 'Montserrat', sans-serif; }
     </style>
@@ -51,7 +57,11 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
                 <a href="{{ route('az-list') }}" class="text-gray-300 hover:text-white transition">A - Z LIST</a>
+=======
+                <a href="{{ route('az-list') }}" class="{{ request()->routeIs('az-list*') ? 'text-brand-red' : 'text-gray-300 hover:text-white' }} transition">A - Z LIST</a>
+>>>>>>> cbfd8f8 (add fe)
             </div>
 
             <div class="flex items-center space-x-4">
@@ -70,7 +80,11 @@
     </main>
 
     <footer class="bg-black py-10 text-center border-t border-gray-800 mt-10">
+<<<<<<< HEAD
         <p class="text-gray-500 text-sm">&copy; 2025 Movies Mania. All rights reserved | Created by CREATE TABLE Group.</p>
+=======
+        <p class="text-gray-500 text-sm">&copy; 2025 Movies Mania. All Rights Reserved.</p>
+>>>>>>> cbfd8f8 (add fe)
     </footer>
 
     <!-- Login Modal -->
@@ -80,15 +94,31 @@
             
             <h2 class="text-center text-xl font-bold tracking-widest text-white mb-8">LOGIN</h2>
             
+<<<<<<< HEAD
             <form action="{{ route('login') }}" method="POST" class="space-y-4">
                 @csrf
                 <input type="email" name="email" placeholder="Email" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 font-semibold rounded">
                 <input type="password" name="password" placeholder="Password" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 font-bold text-lg rounded">
+=======
+            <form action="#" method="POST" class="space-y-4">
+                <input type="text" placeholder="Username" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 font-semibold rounded">
+                <input type="password" placeholder="Password" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 font-bold text-lg rounded">
+>>>>>>> cbfd8f8 (add fe)
                 
                 <button type="submit" class="w-full bg-brand-teal text-white py-3 font-bold text-xs uppercase tracking-wider hover:bg-teal-600 transition mt-6 rounded">
                     LOGIN NOW
                 </button>
             </form>
+<<<<<<< HEAD
+=======
+            
+            <div class="flex justify-center space-x-2 mt-8">
+                <div class="w-8 h-1 bg-zinc-700 rounded-full"></div>
+                <div class="w-8 h-1 bg-zinc-700 rounded-full"></div>
+                <div class="w-8 h-1 bg-zinc-700 rounded-full"></div>
+                <div class="w-8 h-1 bg-brand-teal rounded-full"></div>
+            </div>
+>>>>>>> cbfd8f8 (add fe)
         </div>
     </div>
 
@@ -99,11 +129,18 @@
             
             <h2 class="text-center text-xl font-bold tracking-widest text-white mb-8">REGISTER</h2>
             
+<<<<<<< HEAD
             <form action="{{ route('register') }}" method="POST" class="space-y-4">
                 @csrf
                 <input type="text" name="name" placeholder="Full Name" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 rounded">
                 <input type="email" name="email" placeholder="Email" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 font-semibold rounded">
                 <input type="date" name="dob" placeholder="Date of Birth" onclick="this.showPicker()" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 rounded cursor-pointer">
+=======
+            <form action="#" method="POST" class="space-y-4">
+                <input type="text" placeholder="Full Name" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 rounded">
+                <input type="text" placeholder="Username" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 font-semibold rounded">
+                <input type="text" placeholder="Date of Birth" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 rounded">
+>>>>>>> cbfd8f8 (add fe)
                 
                 <div class="flex justify-center space-x-6 text-sm text-gray-400 my-4">
                     <label class="flex items-center space-x-2 cursor-pointer hover:text-white transition">
@@ -116,7 +153,11 @@
                     </label>
                 </div>
                 
+<<<<<<< HEAD
                 <input type="password" name="password" placeholder="Password" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 font-bold text-lg rounded">
+=======
+                <input type="password" placeholder="Password" class="w-full bg-black border border-zinc-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal text-center placeholder-gray-500 font-bold text-lg rounded">
+>>>>>>> cbfd8f8 (add fe)
                 
                 <button type="submit" class="w-full bg-brand-teal text-white py-3 font-bold text-xs uppercase tracking-wider hover:bg-teal-600 transition mt-6 rounded">
                     REGISTER NOW
@@ -133,6 +174,7 @@
         </form>
     </div>
 
+<<<<<<< HEAD
     <script>
         @if(session('success'))
             Swal.fire({
@@ -167,5 +209,7 @@
         @endif
     </script>
 
+=======
+>>>>>>> cbfd8f8 (add fe)
 </body>
 </html>
