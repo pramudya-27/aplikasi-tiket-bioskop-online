@@ -1,16 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 // Route untuk Homepage User
 Route::get('/', function () {
     return view('pages.front.home.index');
 })->name('home');
 
-// Placeholder untuk dashboard nanti
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Dashboard User
 Route::get('/dashboard', function () {
     return view('pages.front.user.dashboard');
-})->name('user.dashboard');
+})->middleware('auth')->name('user.dashboard');
 
 Route::get('/genre/{slug?}', function ($slug = null) {
     return view('pages.front.genre.index', ['slug' => $slug]);
