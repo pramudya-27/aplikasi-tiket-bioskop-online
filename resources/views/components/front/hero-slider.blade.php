@@ -38,13 +38,39 @@
     </div>
 </div>
 
-<div class="w-full bg-brand-red py-4">
-    <div class="container mx-auto px-6 flex items-center space-x-4">
-        <a href="#" id="loginBtn" class="bg-black text-white text-xs font-bold px-6 py-2 uppercase tracking-wider hover:bg-gray-900 transition">
-            Login
-        </a>
-        <button id="registerBtn" class="bg-black text-white text-xs font-bold px-6 py-2 uppercase tracking-wider hover:text-brand-teal transition">
-            Register
-        </button>
+<div class="w-full bg-brand-red py-4 relative z-40">
+    <div class="container mx-auto px-6 flex items-center justify-between">
+        @auth
+            <!-- Auth View: Account Dropdown & Cart -->
+            <div class="relative group">
+                <button class="bg-black text-white text-xs font-bold px-6 py-2 uppercase tracking-wider flex items-center hover:bg-gray-900 transition">
+                    ACCOUNT <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <div class="absolute left-0 top-full mt-0 w-48 bg-black border border-zinc-800 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <div class="py-2">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-zinc-800 hover:text-white uppercase font-bold">
+                                LOGOUT
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="bg-black text-white text-xs font-bold px-6 py-2 uppercase tracking-wider hover:bg-gray-900 transition">
+                KERANJANG
+            </a>
+        @else
+            <!-- Guest View: Left Login/Register -->
+            <div class=" flex-1 flex justify-left space-x-4 "> 
+                 <button id="loginBtn" class="bg-black text-white text-xs font-bold px-6 py-2 uppercase tracking-wider hover:bg-gray-900 transition">
+                    LOGIN
+                </button>
+                <button id="registerBtn" class="bg-black text-white text-xs font-bold px-6 py-2 uppercase tracking-wider hover:bg-gray-900 transition">
+                    REGISTER
+                </button>
+            </div>
+        @endauth
     </div>
 </div>
