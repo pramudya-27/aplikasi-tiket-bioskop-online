@@ -38,7 +38,6 @@
     </div>
 </div>
 
-<<<<<<< HEAD
 <div class="w-full bg-brand-red py-4 relative z-40">
     <div class="container mx-auto px-6 flex items-center justify-between">
         @auth
@@ -73,7 +72,6 @@
                 </button>
             </div>
         @endauth
-=======
 <div class="w-full bg-brand-red py-4">
     <div class="container mx-auto px-6 flex items-center space-x-4">
         <a href="#" id="loginBtn" class="bg-black text-white text-xs font-bold px-6 py-2 uppercase tracking-wider hover:bg-gray-900 transition">
@@ -82,6 +80,5 @@
         <button id="registerBtn" class="bg-black text-white text-xs font-bold px-6 py-2 uppercase tracking-wider hover:text-brand-teal transition">
             Register
         </button>
->>>>>>> cbfd8f8 (add fe)
     </div>
 </div>
