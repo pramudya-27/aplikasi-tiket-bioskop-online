@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Movies Mania</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
@@ -69,7 +70,7 @@
     </main>
 
     <footer class="bg-black py-10 text-center border-t border-gray-800 mt-10">
-        <p class="text-gray-500 text-sm">&copy; 2025 Movies Mania. All Rights Reserved.</p>
+        <p class="text-gray-500 text-sm">&copy; 2025 Movies Mania. All rights reserved | Created by CREATE TABLE Group.</p>
     </footer>
 
     <!-- Login Modal -->
