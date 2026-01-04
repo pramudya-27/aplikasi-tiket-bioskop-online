@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 97cf3db (Menyelesaikan fitur login)
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Movies Mania</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -76,10 +79,14 @@
 
     <footer class="bg-black py-10 text-center border-t border-gray-800 mt-10">
 <<<<<<< HEAD
+<<<<<<< HEAD
         <p class="text-gray-500 text-sm">&copy; 2025 Movies Mania. All rights reserved | Created by CREATE TABLE Group.</p>
 =======
         <p class="text-gray-500 text-sm">&copy; 2025 Movies Mania. All Rights Reserved.</p>
 >>>>>>> cbfd8f8 (add fe)
+=======
+        <p class="text-gray-500 text-sm">&copy; 2025 Movies Mania. All rights reserved | Created by CREATE TABLE Group.</p>
+>>>>>>> 97cf3db (Menyelesaikan fitur login)
     </footer>
 
     <!-- Login Modal -->
