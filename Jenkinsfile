@@ -144,7 +144,7 @@ pipeline {
         stage('Verification & Cleanup') {
             agent {
                 docker {
-                    image 'laravelsail/php84-composer:latest' # Use PHP container for basic interaction
+                    image 'laravelsail/php84-composer:latest' // Use PHP container for basic interaction
                 }
             }
             steps {
