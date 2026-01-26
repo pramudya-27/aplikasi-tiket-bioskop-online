@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravel-bioskop
+    container_name: laravel_bioskop_app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes: []
