@@ -105,7 +105,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy & Verification') {
             agent {
                 docker {
                     image 'laravelsail/php84-composer:latest'
@@ -119,22 +119,10 @@ pipeline {
                          sh 'chmod +x deliver.sh'
                          sh './deliver.sh'
                     } else {
-                         // Windows fallback if needed, but Jenkins is usually Unix-like
                          bat 'deliver.sh' 
                     }
-                }
-            }
-        }
 
-        stage('Verification & Cleanup') {
-            agent {
-                docker {
-                    image 'laravelsail/php84-composer:latest'
-                    // Ensure access to .pidfile created in previous stage
-                }
-            }
-            steps {
-                script {
+                    // Wait for user verification
                     timeout(time: 5, unit: 'MINUTES') { 
                         def userInput = input(
                             id: 'UserInput', 
