@@ -12,12 +12,21 @@ echo 'the file ".pidfile".'
 # Ensure permissions (optional but good practice)
 chmod +x deliver.sh
 
-set -x
 # Start server on 0.0.0.0 to be accessible from outside the container, port 8000
-php artisan serve --host=0.0.0.0 --port=8000 &
-sleep 1
-echo $! > .pidfile
-set +x
+# Redirect output to server.log for debugging
+php artisan serve --host=0.0.0.0 --port=8000 > server.log 2>&1 &
+PID=$!
+sleep 3
+
+# Check if process is still running
+if ps -p $PID > /dev/null; then
+   echo "Server started successfully with PID $PID"
+   echo $PID > .pidfile
+else
+   echo "Server failed to start!"
+   cat server.log
+   exit 1
+fi
 
 echo 'Now...'
 echo 'Visit http://localhost:8000 to see your Laravel application in action.'
