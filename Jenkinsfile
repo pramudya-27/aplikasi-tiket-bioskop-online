@@ -108,34 +108,19 @@ pipeline {
         stage('Deploy') {
             agent {
                 docker {
-                    image 'docker:latest'
-                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+                    image 'laravelsail/php84-composer:latest'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock -p 8000:8000' 
                 }
             }
             steps {
                 script {
-                    echo 'Deploying with Docker...'
+                    echo 'Deploying with deliver.sh...'
                     if (isUnix()) {
-                         // Check if docker-compose is available, if not try 'docker compose'
-                         sh '''
-                            if command -v docker-compose &> /dev/null; then
-                                docker-compose down || true
-                                docker-compose up -d --build
-                            else
-                                docker compose down || true
-                                docker compose up -d --build
-                            fi
-                         '''
-                         
-                         def serverIp = sh(script: "hostname -I | awk '{print \$1}'", returnStdout: true).trim()
-                         echo "Application deployed successfully!"
-                         echo "Access URL: http://localhost:8080"
-                         echo "Internal IP: http://${serverIp}:8080 (For internal network only)"
+                         sh 'chmod +x deliver.sh'
+                         sh './deliver.sh'
                     } else {
-                         bat 'docker-compose down || exit 0'
-                         bat 'docker-compose up -d --build'
-                         echo "Application deployed successfully!"
-                         echo "Access URL: http://localhost:8080 (Check your server IP)"
+                         // Windows fallback if needed, but Jenkins is usually Unix-like
+                         bat 'deliver.sh' 
                     }
                 }
             }
@@ -144,22 +129,27 @@ pipeline {
         stage('Verification & Cleanup') {
             agent {
                 docker {
-                    image 'laravelsail/php84-composer:latest' // Use PHP container for basic interaction
+                    image 'laravelsail/php84-composer:latest'
+                    // Ensure access to .pidfile created in previous stage
                 }
             }
             steps {
                 script {
-                    // Interactive input often pauses the pipeline.
-                    // If running automatically, you might want to remove this or set a timeout.
                     timeout(time: 5, unit: 'MINUTES') { 
                         def userInput = input(
                             id: 'UserInput', 
-                            message: 'App is running. Do you want to continue (and clean workspace)?', 
-                            parameters: [string(defaultValue: 'yes', description: 'Type "yes" to finish and clean workspace', name: 'Confirm')]
+                            message: 'App is running at http://localhost:8000. Do you want to stop it?', 
+                            parameters: [string(defaultValue: 'yes', description: 'Type "yes" to stop the app and cleanup', name: 'Confirm')]
                         )
                         
                         if (userInput.toLowerCase() == 'yes') {
-                            echo 'User chose to continue. Cleaning up workspace...'
+                            echo 'Stopping application...'
+                            if (isUnix()) {
+                                sh 'chmod +x kill.sh'
+                                sh './kill.sh'
+                            } else {
+                                bat 'kill.sh'
+                            }
                             cleanWs()
                         } else {
                             echo 'User chose to keep workspace.'
