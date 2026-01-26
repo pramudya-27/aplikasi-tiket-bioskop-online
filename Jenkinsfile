@@ -1,6 +1,7 @@
 pipeline {
     agent {
         docker {
+            image 'node:latest'
             image 'laravelsail/php84-composer:latest'
             args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
         }
@@ -21,20 +22,6 @@ pipeline {
                         bat 'copy .env.example .env'
                     }
                 }
-            }
-        }
-
-       stage('Node') {
-            agent {
-                docker {
-                    image 'node:latest'
-                }
-            }
-            steps {
-                sh 'node -v'
-                sh 'npm -v'
-                sh 'npm install'
-                sh 'npm run build'
             }
         }
 
