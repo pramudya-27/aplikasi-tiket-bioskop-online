@@ -48,8 +48,7 @@ pipeline {
             agent {
                 docker {
                     image 'node:latest'
-                    // Mount the current directory to ensure node has access to files (Jenkins usually handles this, but explicit args can be safe)
-                    // No special args usually needed for node unless specific users
+                    args '-u root' 
                 }
             }
             steps {
