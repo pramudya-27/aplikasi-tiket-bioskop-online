@@ -19,7 +19,7 @@ PID=$!
 sleep 3
 
 # Check if process is still running
-if ps -p $PID > /dev/null; then
+if kill -0 $PID > /dev/null 2>&1; then
    echo "Server started successfully with PID $PID"
    echo $PID > .pidfile
 else
