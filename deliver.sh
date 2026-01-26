@@ -22,6 +22,16 @@ sleep 3
 if kill -0 $PID > /dev/null 2>&1; then
    echo "Server started successfully with PID $PID"
    echo $PID > .pidfile
+   
+   echo "Verifying internal connectivity..."
+   sleep 2
+   if curl -s -I http://localhost:8000 | grep "200 OK" > /dev/null; then
+       echo "Internal connectivity check passed!"
+   else
+       echo "Warning: Internal connectivity check failed or returned non-200 status."
+       echo "Output of curl:"
+       curl -v http://localhost:8000 || echo "Curl failed completely"
+   fi
 else
    echo "Server failed to start!"
    cat server.log
