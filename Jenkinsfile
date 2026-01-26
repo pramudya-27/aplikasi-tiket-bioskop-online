@@ -1,8 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'node:latest'
-            image 'composer:2'
+            image 'laravelsail/php84-composer:latest'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
