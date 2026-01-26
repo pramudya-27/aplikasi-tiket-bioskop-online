@@ -24,17 +24,18 @@ pipeline {
             }
         }
 
-        stage('Install Node.js') {
-        steps {
-            sh '''
-            curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
-            apt-get update
-            apt-get install -y nodejs
-            node -v
-            npm -v
-            '''
+       stage('Install Node.js') {
+            steps {
+                sh '''
+                apt-get update
+                apt-get install -y curl ca-certificates
+                curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
+                apt-get install -y nodejs
+                node -v
+                npm -v
+                '''
+            }
         }
-    }
 
         stage('Install Dependencies') {
             steps {
