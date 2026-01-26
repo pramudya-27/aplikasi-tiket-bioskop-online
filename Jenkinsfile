@@ -24,16 +24,17 @@ pipeline {
             }
         }
 
-       stage('Install Node.js') {
+       stage('Node') {
+            agent {
+                docker {
+                    image 'node:latest'
+                }
+            }
             steps {
-                sh '''
-                apt-get update
-                apt-get install -y curl ca-certificates
-                curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
-                apt-get install -y nodejs
-                node -v
-                npm -v
-                '''
+                sh 'node -v'
+                sh 'npm -v'
+                sh 'npm install'
+                sh 'npm run build'
             }
         }
 
