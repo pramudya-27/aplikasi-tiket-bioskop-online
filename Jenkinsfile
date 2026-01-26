@@ -129,7 +129,8 @@ pipeline {
                          
                          def serverIp = sh(script: "hostname -I | awk '{print \$1}'", returnStdout: true).trim()
                          echo "Application deployed successfully!"
-                         echo "Access URL: http://${serverIp}:8080"
+                         echo "Access URL: http://localhost:8080"
+                         echo "Internal IP: http://${serverIp}:8080 (For internal network only)"
                     } else {
                          bat 'docker-compose down || exit 0'
                          bat 'docker-compose up -d --build'
