@@ -30,6 +30,9 @@ WORKDIR /var/www/html
 # Copy code
 COPY . /var/www/html
 
+# Create .env file from example
+RUN cp .env.example .env
+
 # Install PHP dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
