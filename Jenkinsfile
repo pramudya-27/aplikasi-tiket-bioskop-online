@@ -4,6 +4,14 @@ pipeline {
     environment {
         IMAGE_NAME = "aplikasi-tiket-bioskop"
         CONTAINER_NAME = "aplikasi-tiket-bioskop-container"
+        
+        // Database Configuration (Using host.docker.internal to access host MySQL)
+        DB_CONNECTION = "mysql"
+        DB_HOST = "host.docker.internal"
+        DB_PORT = "3306"
+        DB_DATABASE = "aplikasi_tiket_bioskop"
+        DB_USERNAME = "root"
+        DB_PASSWORD = ""
     }
 
     stages {
@@ -24,11 +32,25 @@ pipeline {
             steps {
                 script {
                     echo 'Running Tests inside Container...'
+                    // Note: Tests might need DB access too, adding env vars just in case
                     if (isUnix()) {
-                        // Generate key and run tests
-                        sh 'docker run --rm ${IMAGE_NAME} sh -c "php artisan key:generate && php artisan test"'
+                        sh 'docker run --rm -e DB_CONNECTION=${DB_CONNECTION} -e DB_HOST=${DB_HOST} -e DB_PORT=${DB_PORT} -e DB_DATABASE=${DB_DATABASE} -e DB_USERNAME=${DB_USERNAME} -e DB_PASSWORD=${DB_PASSWORD} ${IMAGE_NAME} sh -c "php artisan key:generate && php artisan test"'
                     } else {
-                        bat 'docker run --rm %IMAGE_NAME% sh -c "php artisan key:generate && php artisan test"'
+                        bat 'docker run --rm -e DB_CONNECTION=%DB_CONNECTION% -e DB_HOST=%DB_HOST% -e DB_PORT=%DB_PORT% -e DB_DATABASE=%DB_DATABASE% -e DB_USERNAME=%DB_USERNAME% -e DB_PASSWORD=%DB_PASSWORD% %IMAGE_NAME% sh -c "php artisan key:generate && php artisan test"'
+                    }
+                }
+            }
+        }
+
+        stage('Migrate Database') {
+            steps {
+                script {
+                    echo 'Running Database Migrations...'
+                    // Run a temporary container to execute migrations
+                    if (isUnix()) {
+                        sh 'docker run --rm -e DB_CONNECTION=${DB_CONNECTION} -e DB_HOST=${DB_HOST} -e DB_PORT=${DB_PORT} -e DB_DATABASE=${DB_DATABASE} -e DB_USERNAME=${DB_USERNAME} -e DB_PASSWORD=${DB_PASSWORD} ${IMAGE_NAME} php artisan migrate --force'
+                    } else {
+                        bat 'docker run --rm -e DB_CONNECTION=%DB_CONNECTION% -e DB_HOST=%DB_HOST% -e DB_PORT=%DB_PORT% -e DB_DATABASE=%DB_DATABASE% -e DB_USERNAME=%DB_USERNAME% -e DB_PASSWORD=%DB_PASSWORD% %IMAGE_NAME% php artisan migrate --force'
                     }
                 }
             }
@@ -38,15 +60,13 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying Application Container...'
-                    // Remove existing container if it exists (ignore error if not exists)
                     if (isUnix()) {
                         sh 'docker rm -f ${CONTAINER_NAME} || true'
-                        sh 'docker run -d -p 8000:80 -p 8080:8080 --name ${CONTAINER_NAME} ${IMAGE_NAME}'
-                        // Check if running
-                         sh 'docker ps | grep ${CONTAINER_NAME}'
+                        sh 'docker run -d -p 8000:80 -p 8080:8080 -e DB_CONNECTION=${DB_CONNECTION} -e DB_HOST=${DB_HOST} -e DB_PORT=${DB_PORT} -e DB_DATABASE=${DB_DATABASE} -e DB_USERNAME=${DB_USERNAME} -e DB_PASSWORD=${DB_PASSWORD} --name ${CONTAINER_NAME} ${IMAGE_NAME}'
+                        sh 'docker ps | grep ${CONTAINER_NAME}'
                     } else {
                         bat 'docker rm -f %CONTAINER_NAME% || exit 0'
-                        bat 'docker run -d -p 8000:80 -p 8080:8080 --name %CONTAINER_NAME% %IMAGE_NAME%'
+                        bat 'docker run -d -p 8000:80 -p 8080:8080 -e DB_CONNECTION=%DB_CONNECTION% -e DB_HOST=%DB_HOST% -e DB_PORT=%DB_PORT% -e DB_DATABASE=%DB_DATABASE% -e DB_USERNAME=%DB_USERNAME% -e DB_PASSWORD=%DB_PASSWORD% --name %CONTAINER_NAME% %IMAGE_NAME%'
                         bat 'docker ps | findstr %CONTAINER_NAME%'
                     }
                 }
@@ -57,11 +77,10 @@ pipeline {
             steps {
                 script {
                     echo 'Waiting for user verification...'
-                    // Wait for user verification
                      timeout(time: 10, unit: 'MINUTES') { 
                         input(
                             id: 'UserInput', 
-                            message: 'App is running at http://localhost:8000. Click "Proceed" to cleanup and finish.', 
+                            message: 'App is running at http://localhost:8000 with DB connection. Click "Proceed" to cleanup and finish.', 
                             ok: 'Cleanup & Finish'
                         )
                     }
