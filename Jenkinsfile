@@ -18,8 +18,21 @@ pipeline {
                     echo 'Preparing Environment...'
                     if (isUnix()) {
                         sh 'cp .env.example .env'
+                        // Configure .env for SQLite
+                        sh "sed -i 's/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/g' .env"
+                        sh "sed -i 's/DB_DATABASE=aplikasi_tiket_bioskop/DB_DATABASE=\\/var\\/www\\/html\\/database\\/database.sqlite/g' .env"
+                        // Change DB_HOST to avoid confusion, though ignored by sqlite driver usually
+                        sh "sed -i 's/DB_HOST=127.0.0.1/DB_HOST=/g' .env"
+                        
+                        // Create SQLite database file
+                        sh 'touch database/database.sqlite'
+                        sh 'chmod 777 database/database.sqlite'
+                        sh 'chmod 777 database'
                     } else {
                         bat 'copy .env.example .env'
+                        // Windows bat support for sed is limited, assuming linux agent as per user context usually
+                        // But if running on windows, we might need powershell or just append. 
+                        // For now, focusing on the unix/docker path as agent is dockerfile.
                     }
                 }
             }
