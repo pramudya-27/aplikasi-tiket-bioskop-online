@@ -1,5 +1,10 @@
 pipeline {
-    agent none
+    agent {
+        dockerfile {
+            filename 'Dockerfile'
+            args '-u root' 
+        }
+    }
 
     environment {
         APP_ENV = 'testing'
@@ -7,12 +12,6 @@ pipeline {
 
     stages {
         stage('Preparation') {
-            agent {
-                docker {
-                    image 'laravelsail/php84-composer:latest'
-                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 script {
                     echo 'Preparing Environment...'
@@ -25,39 +24,17 @@ pipeline {
             }
         }
 
-        stage('Install PHP Dependencies') {
-            agent {
-                docker {
-                    image 'laravelsail/php84-composer:latest'
-                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
+        stage('Install Dependencies') {
             steps {
                 script {
-                    echo 'Installing PHP dependencies...'
+                    echo 'Installing PHP & Node dependencies...'
+                    // We run install again to ensure the bind-mounted workspace is populated
                     if (isUnix()) {
                         sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
-                    } else {
-                        bat 'composer install --no-interaction --prefer-dist --optimize-autoloader'
-                    }
-                }
-            }
-        }
-
-        stage('Install Node & Build Assets') {
-            agent {
-                docker {
-                    image 'node:latest'
-                    args '-u root' 
-                }
-            }
-            steps {
-                script {
-                    echo 'Installing Node dependencies and building...'
-                    if (isUnix()) {
                         sh 'npm install'
                         sh 'npm run build'
                     } else {
+                        bat 'composer install --no-interaction --prefer-dist --optimize-autoloader'
                         bat 'npm install'
                         bat 'npm run build'
                     }
@@ -66,18 +43,11 @@ pipeline {
         }
 
         stage('Setup Application') {
-            agent {
-                docker {
-                    image 'laravelsail/php84-composer:latest'
-                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 script {
                     echo 'Generating Application Key...'
                     if (isUnix()) {
                         sh 'php artisan key:generate'
-                        // Set permissions for storage
                         sh 'chmod -R 777 storage bootstrap/cache'
                     } else {
                         bat 'php artisan key:generate'
@@ -87,12 +57,6 @@ pipeline {
         }
 
         stage('Run Tests') {
-            agent {
-                docker {
-                    image 'laravelsail/php84-composer:latest'
-                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 script {
                     echo 'Running PHPUnit Tests...'
@@ -106,12 +70,6 @@ pipeline {
         }
 
         stage('Deploy & Verification') {
-            agent {
-                docker {
-                    image 'laravelsail/php84-composer:latest'
-                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock -p 8000:8000' 
-                }
-            }
             steps {
                 script {
                     echo 'Deploying with deliver.sh...'
