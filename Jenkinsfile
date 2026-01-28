@@ -1,11 +1,5 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'Dockerfile.ci'
-            args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
-            reuseNode true
-        }
-    }
+    agent none
 
     environment {
         APP_ENV = 'testing'
@@ -13,32 +7,31 @@ pipeline {
 
     stages {
         stage('Preparation') {
+            agent {
+                docker {
+                    image 'laravelsail/php84-composer:latest'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 script {
                     echo 'Preparing Environment...'
                     if (isUnix()) {
                         sh 'cp .env.example .env'
-                        // Configure .env for SQLite
-                        sh "sed -i 's/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/g' .env"
-                        sh "sed -i 's/DB_DATABASE=aplikasi_tiket_bioskop/DB_DATABASE=\\/var\\/www\\/html\\/database\\/database.sqlite/g' .env"
-                        // Change DB_HOST to avoid confusion, though ignored by sqlite driver usually
-                        sh "sed -i 's/DB_HOST=127.0.0.1/DB_HOST=/g' .env"
-                        
-                        // Create SQLite database file
-                        sh 'touch database/database.sqlite'
-                        sh 'chmod 777 database/database.sqlite'
-                        sh 'chmod 777 database'
                     } else {
                         bat 'copy .env.example .env'
-                        // Windows bat support for sed is limited, assuming linux agent as per user context usually
-                        // But if running on windows, we might need powershell or just append. 
-                        // For now, focusing on the unix/docker path as agent is dockerfile.
                     }
                 }
             }
         }
 
         stage('Install PHP Dependencies') {
+            agent {
+                docker {
+                    image 'laravelsail/php84-composer:latest'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 script {
                     echo 'Installing PHP dependencies...'
@@ -52,6 +45,12 @@ pipeline {
         }
 
         stage('Install Node & Build Assets') {
+            agent {
+                docker {
+                    image 'node:latest'
+                    args '-u root' 
+                }
+            }
             steps {
                 script {
                     echo 'Installing Node dependencies and building...'
@@ -67,6 +66,12 @@ pipeline {
         }
 
         stage('Setup Application') {
+            agent {
+                docker {
+                    image 'laravelsail/php84-composer:latest'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 script {
                     echo 'Generating Application Key...'
@@ -82,6 +87,12 @@ pipeline {
         }
 
         stage('Run Tests') {
+            agent {
+                docker {
+                    image 'laravelsail/php84-composer:latest'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 script {
                     echo 'Running PHPUnit Tests...'
@@ -95,6 +106,12 @@ pipeline {
         }
 
         stage('Deploy & Verification') {
+            agent {
+                docker {
+                    image 'laravelsail/php84-composer:latest'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock -p 8000:8000' 
+                }
+            }
             steps {
                 script {
                     echo 'Deploying with deliver.sh...'
