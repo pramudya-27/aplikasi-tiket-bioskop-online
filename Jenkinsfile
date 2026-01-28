@@ -7,7 +7,7 @@ pipeline {
         
         // Database Configuration (Using host.docker.internal to access host MySQL)
         DB_CONNECTION = "mysql"
-        DB_HOST = "localhost"
+        DB_HOST = "mysql"
         DB_PORT = "3306"
         DB_DATABASE = "aplikasi_tiket_bioskop"
         DB_USERNAME = "root"
